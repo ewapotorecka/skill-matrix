@@ -5,7 +5,6 @@ import React from 'react';
 const SkillsMatrix: React.FC = () => {
   return (
     <div className="p-8">
-      {' '}
       <Matrix />
     </div>
   );
