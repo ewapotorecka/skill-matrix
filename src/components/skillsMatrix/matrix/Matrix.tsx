@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 import {
-  Tabs,
-  Tab,
   Table,
   TableBody,
   TableCell,
@@ -11,7 +9,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField,
 } from '@mui/material';
 
 interface Level {
