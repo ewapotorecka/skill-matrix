@@ -1,7 +1,5 @@
 import { employees } from '@/mocks/employees';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import { Typography } from 'antd';
 
 interface pageProps {
   params: { id: string };
@@ -12,14 +10,14 @@ const EmployeePage: React.FC<pageProps> = async ({ params }) => {
   const employee = employees.find((employee) => employee.id === id);
 
   return (
-    <Container className="p-4">
-      <Box className="flex gap-4 items-end">
-        <Typography variant="h4">{employee?.name}</Typography>
-        <Typography variant="h6" className="uppercase">
+    <div className="p-4">
+      <div className="flex gap-4 items-end">
+        <Typography.Title level={4}>{employee?.name}</Typography.Title>
+        <Typography.Title level={5} className="uppercase">
           {employee?.position}
-        </Typography>
-      </Box>
-    </Container>
+        </Typography.Title>
+      </div>
+    </div>
   );
 };
 export default EmployeePage;
