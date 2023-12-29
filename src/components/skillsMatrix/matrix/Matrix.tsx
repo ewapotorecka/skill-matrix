@@ -1,15 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from '@mui/material';
+import { Table, Typography } from 'antd';
+
+const { Text } = Typography;
 
 interface Level {
   id: number;
@@ -87,26 +81,15 @@ const skills: Skill[] = [
 export const Matrix: React.FC = () => {
   return (
     <div>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow className="uppercase">
-              <TableCell className="font-bold text-xs">name</TableCell>
-              <TableCell className="font-bold text-xs">description</TableCell>
-              <TableCell className="font-bold text-xs">category</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {skills.map((skill) => (
-              <TableRow key={skill.name}>
-                <TableCell>{skill.name}</TableCell>
-                <TableCell>{skill.description}</TableCell>
-                <TableCell>{skill.category}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <Table dataSource={skills} pagination={false}>
+        <Table.Column title="name" dataIndex="name" key="name" />
+        <Table.Column
+          title="description"
+          dataIndex="description"
+          key="description"
+        />
+        <Table.Column title="category" dataIndex="category" key="category" />
+      </Table>
     </div>
   );
 };
