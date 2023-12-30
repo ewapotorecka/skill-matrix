@@ -3,34 +3,86 @@
 import { useRouter } from 'next/navigation';
 
 import React, { useEffect, useState } from 'react';
-import { Button, Drawer, Space, Table } from 'antd';
+import { Button, Card, Drawer, Select, Space, Table, Typography } from 'antd';
 import { supabase } from '@/lib/initSupabase';
 import EditForm from '../skillDetailed/editForm';
+import type { RadioChangeEvent } from 'antd';
 
 export const Matrix: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [skills, setSkills] = useState();
+  const [categories, setCategories] = useState<{ name: string }[]>();
+  const [categoryFilter, setCategoryFilter] = useState<string | undefined>();
   const router = useRouter();
 
   const onClose = () => {
     setOpen(false);
   };
-  const getSkills = async () => {
-    let { data, error } = await supabase.from('skills').select('*');
+  const getSkills = async (categoryFilter?: string) => {
+    if (categoryFilter) {
+      let { data, error } = await supabase
+        .from('skills')
+        .select('*')
+        .eq('category', categoryFilter);
 
-    if (data) {
-      // @ts-ignore
-      setSkills(data);
+      if (data) {
+        // @ts-ignore
+        setSkills(data);
+      }
+    } else {
+      let { data, error } = await supabase.from('skills').select('*');
+
+      if (data) {
+        // @ts-ignore
+        setSkills(data);
+      }
+    }
+  };
+  const getCategories = async () => {
+    let { data: categories, error } = await supabase
+      .from('skill_categories')
+      .select('*');
+
+    if (categories) {
+      setCategories(categories);
     }
   };
   useEffect(() => {
-    getSkills();
+    getCategories();
   }, []);
+
+  useEffect(() => {
+    getSkills(categoryFilter);
+  }, [categoryFilter]);
   return (
     <div className="flex flex-col gap-8">
-      <Button onClick={() => setOpen(true)} className="w-fit">
-        Add new skill
-      </Button>
+      <Card>
+        <Space>
+          <Typography.Text className="font-bold text-sm">
+            FILTERS
+          </Typography.Text>
+          <Select
+            className="min-w-[140px]"
+            placeholder="Category"
+            allowClear
+            onChange={(option) =>
+              setCategoryFilter(
+                categories ? categories[option - 1]?.name : undefined
+              )
+            }
+          >
+            {categories?.map((category: any) => (
+              <Select.Option key={category.id} value={category.id}>
+                {category.name}
+              </Select.Option>
+            ))}
+          </Select>
+          <Button onClick={() => setOpen(true)} className="w-fit ml-24">
+            Add new skill
+          </Button>
+        </Space>
+      </Card>
+
       <Table
         dataSource={skills}
         pagination={false}
