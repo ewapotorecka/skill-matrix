@@ -1,5 +1,7 @@
 import SkillDetailed from '@/components/adminDashboard/skillsMatrix/skillDetailed';
+import { supabase } from '@/lib/initSupabase';
 import { skills } from '@/mocks/skills';
+import { useEffect, useState } from 'react';
 
 interface pageProps {
   params: { id: string };
@@ -7,8 +9,7 @@ interface pageProps {
 
 const EmployeePage: React.FC<pageProps> = async ({ params }) => {
   const { id } = params;
-  const skill = skills.find((skill) => skill.id === id);
 
-  return <div className="p-4">{skill && <SkillDetailed data={skill} />}</div>;
+  return <div className="p-4">{id && <SkillDetailed id={id} />}</div>;
 };
 export default EmployeePage;
