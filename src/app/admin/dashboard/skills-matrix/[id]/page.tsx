@@ -1,7 +1,4 @@
 import SkillDetailed from '@/components/adminDashboard/skillsMatrix/skillDetailed';
-import { supabase } from '@/lib/initSupabase';
-import { skills } from '@/mocks/skills';
-import { useEffect, useState } from 'react';
 
 interface pageProps {
   params: { id: string };

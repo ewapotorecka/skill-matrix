@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Layout, Menu } from 'antd';
+import { Menu } from 'antd';
 import Link from 'next/link';
 
 const items = [

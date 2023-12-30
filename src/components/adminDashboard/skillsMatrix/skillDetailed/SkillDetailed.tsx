@@ -1,21 +1,15 @@
 'use client';
 
-import {
-  Button,
-  Card,
-  Descriptions,
-  Drawer,
-  List,
-  Space,
-  Tag,
-  Typography,
-} from 'antd';
+import { Button, Card, Descriptions, Drawer, Space, Tag } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 
 import React, { useEffect, useState } from 'react';
 import EditForm from './editForm';
 import { SkillDetailedData } from '@/mocks/skills';
 import { supabase } from '@/lib/initSupabase';
+import { TagRender } from '@/utils/tagRenderer';
+import { getDepartmentColor } from '@/utils/getDepartmentColor';
+import { getCategoryColor } from '@/utils/getCategoryColor';
 
 interface SkillDetailedProps {
   id: string;
@@ -24,6 +18,7 @@ interface SkillDetailedProps {
 export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
   const [open, setOpen] = useState(false);
   const [skillData, setSkillData] = useState<SkillDetailedData>();
+
   const getSkill = async () => {
     let { data, error } = await supabase
       .from('skills')
@@ -31,9 +26,11 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
       .eq('id', id);
 
     if (data) {
+      console.log('data', data);
       setSkillData(data[0]);
     }
   };
+
   useEffect(() => {
     getSkill();
   }, []);
@@ -64,7 +61,9 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
 
         <Descriptions>
           <Descriptions.Item label="Category">
-            <Tag color="magenta">{skillData?.category}</Tag>
+            <Tag color={getCategoryColor(skillData?.category)}>
+              {skillData?.category}
+            </Tag>
           </Descriptions.Item>
         </Descriptions>
         <Space className="flex flex-col items-start gap-4">
@@ -74,75 +73,126 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
                 {skillData?.l1_description}
               </Descriptions.Item>
             </Descriptions>
-            {/* <List
-              dataSource={level.examples}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text>{item}</Typography.Text>
-                </List.Item>
-              )}
-            /> */}
+            <Descriptions>
+              <Descriptions.Item label="example">
+                {skillData?.l1_examples}
+              </Descriptions.Item>
+            </Descriptions>
           </Space>
+          <Descriptions>
+            <Descriptions.Item label="positions">
+              <Space>
+                {skillData?.l1_positions?.map((position) => {
+                  const positionToRender = {
+                    value: position,
+                    color: getDepartmentColor(position),
+                  };
+                  return TagRender(positionToRender);
+                })}
+              </Space>
+            </Descriptions.Item>
+          </Descriptions>
+
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L2">
                 {skillData?.l2_description}
               </Descriptions.Item>
             </Descriptions>
-            {/* <List
-              dataSource={level.examples}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text>{item}</Typography.Text>
-                </List.Item>
-              )}
-            /> */}
+            <Descriptions>
+              <Descriptions.Item label="example">
+                {skillData?.l2_examples}
+              </Descriptions.Item>
+            </Descriptions>
           </Space>
+          <Descriptions>
+            <Descriptions.Item label="positions">
+              <Space>
+                {skillData?.l2_positions?.map((position) => {
+                  const positionToRender = {
+                    value: position,
+                    color: getDepartmentColor(position),
+                  };
+                  return TagRender(positionToRender);
+                })}
+              </Space>
+            </Descriptions.Item>
+          </Descriptions>
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L3">
                 {skillData?.l3_description}
               </Descriptions.Item>
             </Descriptions>
-            {/* <List
-              dataSource={level.examples}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text>{item}</Typography.Text>
-                </List.Item>
-              )}
-            /> */}
+            <Descriptions>
+              <Descriptions.Item label="example">
+                {skillData?.l3_examples}
+              </Descriptions.Item>
+            </Descriptions>
           </Space>
+          <Descriptions>
+            <Descriptions.Item label="positions">
+              <Space>
+                {skillData?.l3_positions?.map((position) => {
+                  const positionToRender = {
+                    value: position,
+                    color: getDepartmentColor(position),
+                  };
+                  return TagRender(positionToRender);
+                })}
+              </Space>
+            </Descriptions.Item>
+          </Descriptions>
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L4">
                 {skillData?.l4_description}
               </Descriptions.Item>
             </Descriptions>
-            {/* <List
-              dataSource={level.examples}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text>{item}</Typography.Text>
-                </List.Item>
-              )}
-            /> */}
+            <Descriptions>
+              <Descriptions.Item label="example">
+                {skillData?.l4_examples}
+              </Descriptions.Item>
+            </Descriptions>
           </Space>
+          <Descriptions>
+            <Descriptions.Item label="positions">
+              <Space>
+                {skillData?.l4_positions?.map((position) => {
+                  const positionToRender = {
+                    value: position,
+                    color: getDepartmentColor(position),
+                  };
+                  return TagRender(positionToRender);
+                })}
+              </Space>
+            </Descriptions.Item>
+          </Descriptions>
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L5">
                 {skillData?.l5_description}
               </Descriptions.Item>
             </Descriptions>
-            {/* <List
-              dataSource={level.examples}
-              renderItem={(item) => (
-                <List.Item>
-                  <Typography.Text>{item}</Typography.Text>
-                </List.Item>
-              )}
-            /> */}
+            <Descriptions>
+              <Descriptions.Item label="example">
+                {skillData?.l5_examples}
+              </Descriptions.Item>
+            </Descriptions>
           </Space>
+          <Descriptions>
+            <Descriptions.Item label="positions">
+              <Space>
+                {skillData?.l5_positions?.map((position) => {
+                  const positionToRender = {
+                    value: position,
+                    color: getDepartmentColor(position),
+                  };
+                  return TagRender(positionToRender);
+                })}
+              </Space>
+            </Descriptions.Item>
+          </Descriptions>
         </Space>
       </Space>
       <Drawer
