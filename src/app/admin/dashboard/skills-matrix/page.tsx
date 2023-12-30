@@ -1,5 +1,4 @@
-import Table from '@/components/employees/Table';
-import Matrix from '@/components/skillsMatrix/matrix';
+import Matrix from '@/components/adminDashboard/skillsMatrix/matrix';
 import React from 'react';
 
 const SkillsMatrix: React.FC = () => {

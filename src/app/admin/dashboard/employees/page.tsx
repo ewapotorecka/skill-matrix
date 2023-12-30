@@ -1,4 +1,4 @@
-import Table from '@/components/employees/Table';
+import Table from '@/components/adminDashboard/employees/Table';
 import React from 'react';
 
 const EmployeesPage: React.FC = () => {
