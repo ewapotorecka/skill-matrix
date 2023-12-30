@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Button, Col, Form, Input, Row, Select, Typography } from 'antd';
 import { SkillDetailedData } from '@/mocks/skills';
 import { supabase } from '@/lib/initSupabase';
+import { TagRender } from '@/utils/tagRenderer';
+import { getRandomColor } from '@/utils/getRandomColor';
 
 const { Option } = Select;
 
@@ -20,6 +22,7 @@ const EditForm: React.FC<EditFormProps> = ({
   onEdited,
 }) => {
   const [categories, setCategories] = useState<string[]>([]);
+  const [positionsData, setPositionsData] = useState<any[]>();
 
   const getCategories = async () => {
     let { data, error } = await supabase.from('skill_categories').select('*');
@@ -27,8 +30,22 @@ const EditForm: React.FC<EditFormProps> = ({
       setCategories(data.map((category) => category.name));
     }
   };
+  const getPositions = async () => {
+    let { data: positions, error } = await supabase
+      .from('positions')
+      .select('*');
+    if (positions) {
+      setPositionsData(
+        positions.map((position) => ({
+          value: `${position.seniority}${position.department}`,
+          closable: true,
+        }))
+      );
+    }
+  };
 
   const updateSkill = async (formData: SkillDetailedData) => {
+    console.log(formData);
     const { data, error } = await supabase
       .from('skills')
       .update(formData)
@@ -54,6 +71,7 @@ const EditForm: React.FC<EditFormProps> = ({
 
   useEffect(() => {
     getCategories();
+    getPositions();
   }, []);
 
   return (
@@ -151,6 +169,18 @@ const EditForm: React.FC<EditFormProps> = ({
         </Row>
         <Row gutter={16}>
           <Col span={24}>
+            <Form.Item name="l1_positions" label="L1 Positions">
+              <Select
+                mode="multiple"
+                tagRender={TagRender}
+                style={{ width: '100%' }}
+                options={positionsData}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={24}>
             <Form.Item
               name="l2_description"
               label="L2 Description"
@@ -183,7 +213,19 @@ const EditForm: React.FC<EditFormProps> = ({
               <Input.TextArea rows={4} placeholder="Please enter L2 examples" />
             </Form.Item>
           </Col>
-        </Row>{' '}
+        </Row>
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item name="l2_positions" label="L2 Positions">
+              <Select
+                mode="multiple"
+                tagRender={TagRender}
+                style={{ width: '100%' }}
+                options={positionsData}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item
@@ -218,7 +260,19 @@ const EditForm: React.FC<EditFormProps> = ({
               <Input.TextArea rows={4} placeholder="Please enter L3 examples" />
             </Form.Item>
           </Col>
-        </Row>{' '}
+        </Row>
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item name="l3_positions" label="L3 Positions">
+              <Select
+                mode="multiple"
+                tagRender={TagRender}
+                style={{ width: '100%' }}
+                options={positionsData}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item
@@ -238,6 +292,7 @@ const EditForm: React.FC<EditFormProps> = ({
             </Form.Item>
           </Col>
         </Row>
+
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item
@@ -253,7 +308,19 @@ const EditForm: React.FC<EditFormProps> = ({
               <Input.TextArea rows={4} placeholder="Please enter L4 examples" />
             </Form.Item>
           </Col>
-        </Row>{' '}
+        </Row>
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item name="l4_positions" label="L4 Positions">
+              <Select
+                mode="multiple"
+                tagRender={TagRender}
+                style={{ width: '100%' }}
+                options={positionsData}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
         <Row gutter={16}>
           <Col span={24}>
             <Form.Item
@@ -286,6 +353,18 @@ const EditForm: React.FC<EditFormProps> = ({
               ]}
             >
               <Input.TextArea rows={4} placeholder="Please enter L5 examples" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={24}>
+            <Form.Item name="l5_positions" label="L5 Positions">
+              <Select
+                mode="multiple"
+                tagRender={TagRender}
+                style={{ width: '100%' }}
+                options={positionsData}
+              />
             </Form.Item>
           </Col>
         </Row>

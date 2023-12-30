@@ -12,10 +12,10 @@ const EmployeePage: React.FC<pageProps> = async ({ params }) => {
   return (
     <div className="p-4">
       <div className="flex gap-4 items-end">
-        <Typography.Title level={4}>{employee?.name}</Typography.Title>
+        {/* <Typography.Title level={4}>{employee?.name}</Typography.Title>
         <Typography.Title level={5} className="uppercase">
           {employee?.position}
-        </Typography.Title>
+        </Typography.Title> */}
       </div>
     </div>
   );
