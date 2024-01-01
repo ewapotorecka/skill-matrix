@@ -2,6 +2,7 @@
 
 import { Button, Card, Descriptions, Drawer, Space, Tag } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
+import Markdown from 'react-markdown';
 
 import React, { useEffect, useState } from 'react';
 import EditForm from './editForm';
@@ -75,7 +76,9 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                {skillData?.l1_examples}
+                <Markdown className="flex flex-col">
+                  {skillData?.l1_examples}
+                </Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
@@ -101,7 +104,9 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                {skillData?.l2_examples}
+                <Markdown className="flex flex-col">
+                  {skillData?.l2_examples}
+                </Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
@@ -126,7 +131,7 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                {skillData?.l3_examples}
+                <Markdown>{skillData?.l3_examples}</Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
@@ -151,7 +156,7 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                {skillData?.l4_examples}
+                <Markdown>{skillData?.l4_examples}</Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
@@ -176,7 +181,7 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                {skillData?.l5_examples}
+                <Markdown>{skillData?.l5_examples}</Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>

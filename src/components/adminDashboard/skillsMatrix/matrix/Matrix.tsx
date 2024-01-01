@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, Drawer, Select, Space, Table, Typography } from 'antd';
 import { supabase } from '@/lib/initSupabase';
 import EditForm from '../skillDetailed/editForm';
-import type { RadioChangeEvent } from 'antd';
 
 export const Matrix: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -90,6 +89,9 @@ export const Matrix: React.FC = () => {
           return {
             onClick: (event) => {
               router.push(`/admin/dashboard/skills-matrix/${record.id}`);
+            },
+            style: {
+              cursor: 'pointer',
             },
           };
         }}

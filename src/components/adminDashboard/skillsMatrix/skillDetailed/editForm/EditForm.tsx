@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { Button, Col, Form, Input, Row, Select, Typography } from 'antd';
 import { SkillDetailedData } from '@/mocks/skills';
 import { supabase } from '@/lib/initSupabase';
 import { TagRender } from '@/utils/tagRenderer';
-import { getRandomColor } from '@/utils/getRandomColor';
+import SimpleMDE from 'react-simplemde-editor';
+import 'easymde/dist/easymde.min.css';
 
 const { Option } = Select;
 
@@ -23,6 +24,11 @@ const EditForm: React.FC<EditFormProps> = ({
 }) => {
   const [categories, setCategories] = useState<string[]>([]);
   const [positionsData, setPositionsData] = useState<any[]>();
+  const [value, setValue] = useState('Initial value');
+
+  const onChange = useCallback((value: string) => {
+    setValue(value);
+  }, []);
 
   const getCategories = async () => {
     let { data, error } = await supabase.from('skill_categories').select('*');
@@ -163,7 +169,7 @@ const EditForm: React.FC<EditFormProps> = ({
                 },
               ]}
             >
-              <Input.TextArea rows={4} placeholder="Please enter L1 examples" />
+              <SimpleMDE />
             </Form.Item>
           </Col>
         </Row>
@@ -210,7 +216,7 @@ const EditForm: React.FC<EditFormProps> = ({
                 },
               ]}
             >
-              <Input.TextArea rows={4} placeholder="Please enter L2 examples" />
+              <SimpleMDE />
             </Form.Item>
           </Col>
         </Row>
@@ -257,7 +263,7 @@ const EditForm: React.FC<EditFormProps> = ({
                 },
               ]}
             >
-              <Input.TextArea rows={4} placeholder="Please enter L3 examples" />
+              <SimpleMDE />
             </Form.Item>
           </Col>
         </Row>
@@ -305,7 +311,7 @@ const EditForm: React.FC<EditFormProps> = ({
                 },
               ]}
             >
-              <Input.TextArea rows={4} placeholder="Please enter L4 examples" />
+              <SimpleMDE />
             </Form.Item>
           </Col>
         </Row>
@@ -352,7 +358,7 @@ const EditForm: React.FC<EditFormProps> = ({
                 },
               ]}
             >
-              <Input.TextArea rows={4} placeholder="Please enter L5 examples" />
+              <SimpleMDE />
             </Form.Item>
           </Col>
         </Row>
