@@ -4,8 +4,12 @@ import { Button, Col, Form, Input, Row, Select, Typography } from 'antd';
 import { SkillDetailedData } from '@/mocks/skills';
 import { supabase } from '@/lib/initSupabase';
 import { TagRender } from '@/utils/tagRenderer';
-import SimpleMDE from 'react-simplemde-editor';
 import 'easymde/dist/easymde.min.css';
+import dynamic from 'next/dynamic';
+
+const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
+  ssr: false,
+});
 
 const { Option } = Select;
 
