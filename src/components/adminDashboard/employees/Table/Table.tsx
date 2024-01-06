@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 
-import { employees } from '@/mocks/employees';
 import Link from 'next/link';
 
 import { Table } from 'antd';
@@ -56,7 +55,6 @@ export default function BasicTable() {
     if (data) {
       setEmplopoyeesData(data);
     }
-    console.log(data);
   };
 
   useEffect(() => {
