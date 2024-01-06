@@ -38,22 +38,34 @@ const ReviewsTable = () => {
   const [reviewsData, setReviewsData] = useState<any>();
 
   const getReviewsData = async () => {
-    let { data: reviews, error } = await supabase.from('reviews').select('*');
+    let { data: reviews, error: reviewsError } = await supabase
+      .from('reviews')
+      .select('*');
 
     if (reviews) {
-      reviews.forEach(async (review: any) => {
-        let { data: employee, error } = await supabase
+      const employeeDataPromises = reviews.map((review) =>
+        supabase
           .from('employees')
           .select('*')
-          .eq('id', review.employee);
+          .eq('id', review.employee)
+          .then(({ data: employee }) => {
+            if (employee) {
+              return {
+                ...review,
+                first_name: employee[0].first_name,
+                last_name: employee[0].last_name,
+                position: employee[0].position,
+              };
+            }
+            return null;
+          })
+      );
 
-        if (employee) {
-          review.first_name = employee[0].first_name;
-          review.last_name = employee[0].last_name;
-          review.position = employee[0].position;
-        }
-      });
-      setReviewsData(reviews);
+      const reviewsWithEmployeeData = (
+        await Promise.all(employeeDataPromises)
+      ).filter((review) => review !== null);
+
+      setReviewsData(reviewsWithEmployeeData);
     }
   };
 

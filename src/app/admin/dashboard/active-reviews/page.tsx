@@ -58,8 +58,10 @@ export default function Home() {
 
   return (
     <div className="p-8">
-      <Button onClick={showModal}>New review</Button>
-      <ReviewsTable />
+      <Space direction="vertical" className="w-full" size="large">
+        <Button onClick={showModal}>New review</Button>
+        <ReviewsTable />
+      </Space>
       <Modal
         title="New review"
         open={isModalOpen}
