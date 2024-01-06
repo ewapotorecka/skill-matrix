@@ -1,9 +1,65 @@
 'use client';
 
 import { supabase } from '@/lib/initSupabase';
-import { Card, Descriptions, Space, Typography } from 'antd';
+import { Card, Descriptions, Select, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import Markdown from 'react-markdown';
+import { Tabs } from 'antd';
+import type { TabsProps } from 'antd';
+import { SkillLevelDetails } from '@/interfaces/SkillsData';
+
+const onChange = (key: string) => {
+  console.log(key);
+};
+
+const ReviewContent = ({
+  requiredSkills,
+}: {
+  requiredSkills: SkillLevelDetails[];
+}) => {
+  return (
+    <Space direction="vertical" size="small">
+      {requiredSkills?.map((skill: any) => {
+        return (
+          <Card className="max-w-[1200px]" key={skill.id}>
+            <Descriptions layout="vertical">
+              <Descriptions.Item label="Name">
+                <Typography.Title level={5}>
+                  {skill.main_skill_name}
+                </Typography.Title>
+              </Descriptions.Item>
+              <Descriptions.Item label="Level">
+                <Typography.Title level={5}>{skill.level}</Typography.Title>
+              </Descriptions.Item>
+              <Descriptions.Item label="Description">
+                <Typography.Title level={5}>
+                  {skill.description}
+                </Typography.Title>
+              </Descriptions.Item>
+              <Descriptions.Item label="Examples">
+                <Typography.Title level={5}>
+                  <Markdown>{skill.examples}</Markdown>
+                </Typography.Title>
+              </Descriptions.Item>
+              <Descriptions.Item label="Evaluation">
+                <Select
+                  placeholder="Select an option"
+                  // onChange={onSelect}
+                  options={[
+                    { value: 'working towards' },
+                    { value: 'meeting' },
+                    { value: 'exceeding' },
+                  ]}
+                  style={{ width: 200 }}
+                />
+              </Descriptions.Item>
+            </Descriptions>
+          </Card>
+        );
+      })}
+    </Space>
+  );
+};
 
 const PerformanceReview = ({ id }: { id: string }) => {
   const [reviewData, setReviewData] = useState<any>(null);
@@ -44,6 +100,24 @@ const PerformanceReview = ({ id }: { id: string }) => {
     }
   };
 
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: 'Self Review',
+      children: <ReviewContent requiredSkills={requiredSkills} />,
+    },
+    {
+      key: '2',
+      label: 'Lead Review',
+      children: <ReviewContent requiredSkills={requiredSkills} />,
+    },
+    {
+      key: '3',
+      label: 'Performance Review',
+      children: <ReviewContent requiredSkills={requiredSkills} />,
+    },
+  ];
+
   useEffect(() => {
     getReviewData();
   }, []);
@@ -65,33 +139,7 @@ const PerformanceReview = ({ id }: { id: string }) => {
           </Descriptions.Item>
         </Descriptions>
       </Card>
-      <Typography.Title level={4}>Required Skills</Typography.Title>
-      {requiredSkills?.map((skill: any) => {
-        return (
-          <Card className="max-w-[1200px]" key={skill.id}>
-            <Descriptions layout="vertical">
-              <Descriptions.Item label="Name">
-                <Typography.Title level={5}>
-                  {skill.main_skill_name}
-                </Typography.Title>
-              </Descriptions.Item>
-              <Descriptions.Item label="Level">
-                <Typography.Title level={5}>{skill.level}</Typography.Title>
-              </Descriptions.Item>
-              <Descriptions.Item label="Description">
-                <Typography.Title level={5}>
-                  {skill.description}
-                </Typography.Title>
-              </Descriptions.Item>
-              <Descriptions.Item label="Examples">
-                <Typography.Title level={5}>
-                  <Markdown>{skill.examples}</Markdown>
-                </Typography.Title>
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
-        );
-      })}
+      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
     </Space>
   );
 };
