@@ -6,11 +6,12 @@ import Markdown from 'react-markdown';
 
 import React, { useEffect, useState } from 'react';
 import EditForm from './editForm';
-import { SkillDetailedData } from '@/mocks/skills';
+
 import { supabase } from '@/lib/initSupabase';
 import { TagRender } from '@/utils/tagRenderer';
 import { getDepartmentColor } from '@/utils/getDepartmentColor';
 import { getCategoryColor } from '@/utils/getCategoryColor';
+import { SkillDetailedData, SkillLevelDetails } from '@/interfaces/SkillsData';
 
 interface SkillDetailedProps {
   id: string;
@@ -19,6 +20,11 @@ interface SkillDetailedProps {
 export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
   const [open, setOpen] = useState(false);
   const [skillData, setSkillData] = useState<SkillDetailedData>();
+  const [L1, setL1] = useState<SkillLevelDetails>();
+  const [L2, setL2] = useState<SkillLevelDetails>();
+  const [L3, setL3] = useState<SkillLevelDetails>();
+  const [L4, setL4] = useState<SkillLevelDetails>();
+  const [L5, setL5] = useState<SkillLevelDetails>();
 
   const getSkill = async () => {
     let { data, error } = await supabase
@@ -27,14 +33,44 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
       .eq('id', id);
 
     if (data) {
-      console.log('data', data);
       setSkillData(data[0]);
+      let { data: skill_level1_details, error: error_l1 } = await supabase
+        .from('skill_level_details')
+        .select('*')
+        .eq('id', data[0].L1);
+      if (skill_level1_details) {
+        setL1(skill_level1_details[0]);
+      }
+      let { data: skill_level2_details, error: error_l2 } = await supabase
+        .from('skill_level_details')
+        .select('*')
+        .eq('id', data[0].L2);
+      if (skill_level2_details) {
+        setL2(skill_level2_details[0]);
+      }
+      let { data: skill_level3_details, error: error_l3 } = await supabase
+        .from('skill_level_details')
+        .select('*')
+        .eq('id', data[0].L3);
+      if (skill_level3_details) {
+        setL3(skill_level3_details[0]);
+      }
+      let { data: skill_level4_details, error: error_l4 } = await supabase
+        .from('skill_level_details')
+        .select('*')
+        .eq('id', data[0].L4);
+      if (skill_level4_details) {
+        setL4(skill_level4_details[0]);
+      }
+      let { data: skill_level5_details, error: error_l5 } = await supabase
+        .from('skill_level_details')
+        .select('*')
+        .eq('id', data[0].L5);
+      if (skill_level5_details) {
+        setL5(skill_level5_details[0]);
+      }
     }
   };
-
-  useEffect(() => {
-    getSkill();
-  }, []);
 
   const showDrawer = () => {
     setOpen(true);
@@ -43,6 +79,10 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
   const onClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    getSkill();
+  }, []);
 
   return (
     <Card
@@ -71,21 +111,19 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L1">
-                {skillData?.l1_description}
+                {L1?.description}
               </Descriptions.Item>
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                <Markdown className="flex flex-col">
-                  {skillData?.l1_examples}
-                </Markdown>
+                <Markdown className="flex flex-col">{L1?.examples}</Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
           <Descriptions>
             <Descriptions.Item label="positions">
               <Space>
-                {skillData?.l1_positions?.map((position) => {
+                {L1?.positions?.map((position) => {
                   const positionToRender = {
                     value: position,
                     color: getDepartmentColor(position),
@@ -99,21 +137,19 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L2">
-                {skillData?.l2_description}
+                {L2?.description}
               </Descriptions.Item>
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                <Markdown className="flex flex-col">
-                  {skillData?.l2_examples}
-                </Markdown>
+                <Markdown className="flex flex-col">{L2?.examples}</Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
           <Descriptions>
             <Descriptions.Item label="positions">
               <Space>
-                {skillData?.l2_positions?.map((position) => {
+                {L2?.positions?.map((position) => {
                   const positionToRender = {
                     value: position,
                     color: getDepartmentColor(position),
@@ -126,19 +162,19 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L3">
-                {skillData?.l3_description}
+                {L3?.description}
               </Descriptions.Item>
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                <Markdown>{skillData?.l3_examples}</Markdown>
+                <Markdown>{L3?.examples}</Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
           <Descriptions>
             <Descriptions.Item label="positions">
               <Space>
-                {skillData?.l3_positions?.map((position) => {
+                {L3?.positions?.map((position) => {
                   const positionToRender = {
                     value: position,
                     color: getDepartmentColor(position),
@@ -151,19 +187,19 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L4">
-                {skillData?.l4_description}
+                {L4?.description}
               </Descriptions.Item>
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                <Markdown>{skillData?.l4_examples}</Markdown>
+                <Markdown>{L4?.examples}</Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
           <Descriptions>
             <Descriptions.Item label="positions">
               <Space>
-                {skillData?.l4_positions?.map((position) => {
+                {L4?.positions?.map((position) => {
                   const positionToRender = {
                     value: position,
                     color: getDepartmentColor(position),
@@ -176,19 +212,19 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
           <Space className="flex flex-col items-start justify-center">
             <Descriptions>
               <Descriptions.Item label="L5">
-                {skillData?.l5_description}
+                {L5?.description}
               </Descriptions.Item>
             </Descriptions>
             <Descriptions>
               <Descriptions.Item label="example">
-                <Markdown>{skillData?.l5_examples}</Markdown>
+                <Markdown>{L5?.examples}</Markdown>
               </Descriptions.Item>
             </Descriptions>
           </Space>
           <Descriptions>
             <Descriptions.Item label="positions">
               <Space>
-                {skillData?.l5_positions?.map((position) => {
+                {L5?.positions?.map((position) => {
                   const positionToRender = {
                     value: position,
                     color: getDepartmentColor(position),
@@ -213,7 +249,14 @@ export const SkillDetailed: React.FC<SkillDetailedProps> = ({ id }) => {
         }
       >
         <EditForm
-          defaultData={skillData}
+          defaultData={{
+            ...skillData,
+            L1Details: L1,
+            L2Details: L2,
+            L3Details: L3,
+            L4Details: L4,
+            L5Details: L5,
+          }}
           onClose={onClose}
           onEdited={getSkill}
         />

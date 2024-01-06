@@ -14,6 +14,7 @@ export const TagRender = (props: any) => {
       closable={closable}
       onClose={onClose}
       style={{ marginRight: 3 }}
+      key={value}
     >
       {value}
     </Tag>

@@ -1,9 +1,9 @@
 'use client';
 
 import { supabase } from '@/lib/initSupabase';
-import { employees } from '@/mocks/employees';
 import { Card, Descriptions, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
+import Markdown from 'react-markdown';
 
 const PerformanceReview = ({ id }: { id: string }) => {
   const [reviewData, setReviewData] = useState<any>(null);
@@ -31,18 +31,12 @@ const PerformanceReview = ({ id }: { id: string }) => {
 
         if (employeeData) {
           setEmployeeData(employeeData);
-          let { data: skills, error } = await supabase
-            .from('skills')
-            .select('*');
 
-          let filteredSkills = skills?.filter(
-            (skill) =>
-              skill.l1_positions?.includes(employeeData.position_short) ||
-              skill.l2_positions?.includes(employeeData.position_short) ||
-              skill.l3_positions?.includes(employeeData.position_short) ||
-              skill.l4_positions?.includes(employeeData.position_short) ||
-              skill.l5_positions?.includes(employeeData.position_short)
-          );
+          let { data: filteredSkills, error } = await supabase
+            .from('skill_level_details')
+            .select('*')
+            // Filters
+            .contains('positions', [employeeData.position]);
 
           setRequiredSkills(filteredSkills);
         }
@@ -74,27 +68,27 @@ const PerformanceReview = ({ id }: { id: string }) => {
       <Typography.Title level={4}>Required Skills</Typography.Title>
       {requiredSkills?.map((skill: any) => {
         return (
-          <Card className="max-w-[800px]" key={skill.id}>
+          <Card className="max-w-[1200px]" key={skill.id}>
             <Descriptions layout="vertical">
               <Descriptions.Item label="Name">
-                <Typography.Title level={5}>{skill.name}</Typography.Title>
+                <Typography.Title level={5}>
+                  {skill.main_skill_name}
+                </Typography.Title>
+              </Descriptions.Item>
+              <Descriptions.Item label="Level">
+                <Typography.Title level={5}>{skill.level}</Typography.Title>
               </Descriptions.Item>
               <Descriptions.Item label="Description">
                 <Typography.Title level={5}>
                   {skill.description}
+                </Typography.Title>
+              </Descriptions.Item>
+              <Descriptions.Item label="Examples">
+                <Typography.Title level={5}>
+                  <Markdown>{skill.examples}</Markdown>
                 </Typography.Title>
               </Descriptions.Item>
             </Descriptions>
-            {/* <Descriptions layout="vertical">
-              <Descriptions.Item label="Name">
-                <Typography.Title level={5}>{skill.name}</Typography.Title>
-              </Descriptions.Item>
-              <Descriptions.Item label="Description">
-                <Typography.Title level={5}>
-                  {skill.description}
-                </Typography.Title>
-              </Descriptions.Item>
-            </Descriptions> */}
           </Card>
         );
       })}

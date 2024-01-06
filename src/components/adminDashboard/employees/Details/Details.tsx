@@ -13,8 +13,6 @@ import React, { useEffect, useState } from 'react';
 const EmployeeDetails: React.FC<{ id: string }> = ({ id }) => {
   const [employeeData, setEmplopoyeesData] = useState<EmployeeData>();
 
-  console.log(employeeData);
-
   const getEmployeeDetails = async () => {
     let { data, error } = await supabase
       .from('employees')

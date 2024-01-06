@@ -1,15 +1,37 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import { Button, Col, Form, Input, Row, Select, Typography } from 'antd';
-import { SkillDetailedData } from '@/mocks/skills';
+
 import { supabase } from '@/lib/initSupabase';
 import { TagRender } from '@/utils/tagRenderer';
 import 'easymde/dist/easymde.min.css';
 import dynamic from 'next/dynamic';
+import { SkillDetailedData } from '@/interfaces/SkillsData';
 
 const SimpleMDE = dynamic(() => import('react-simplemde-editor'), {
   ssr: false,
 });
+
+const positionsData = [
+  { value: 'JFE' },
+  { value: 'JBE' },
+  { value: 'JDO' },
+  { value: 'JFS' },
+  { value: 'MFE' },
+  { value: 'MBE' },
+  { value: 'MDO' },
+  { value: 'MFS' },
+  { value: 'SFE' },
+  { value: 'SBE' },
+  { value: 'SDO' },
+  { value: 'SFS' },
+];
+const skillCategories = [
+  { value: 'engineering' },
+  { value: 'technical' },
+  { value: 'soft-skills' },
+  { value: 'leadership' },
+];
 
 const { Option } = Select;
 
@@ -20,6 +42,26 @@ interface EditFormProps {
   onEdited: () => void;
 }
 
+interface SkillsFormData {
+  name: string;
+  category: string;
+  description: string;
+  l1_description: string;
+  l1_examples: string;
+  l1_positions: string[];
+  l2_description: string;
+  l2_examples: string;
+  l2_positions: string[];
+  l3_description: string;
+  l3_examples: string;
+  l3_positions: string[];
+  l4_description: string;
+  l4_examples: string;
+  l4_positions: string[];
+  l5_description: string;
+  l5_examples: string;
+  l5_positions: string[];
+}
 const EditForm: React.FC<EditFormProps> = ({
   defaultData,
   variant = 'edit',
@@ -27,12 +69,6 @@ const EditForm: React.FC<EditFormProps> = ({
   onEdited,
 }) => {
   const [categories, setCategories] = useState<string[]>([]);
-  const [positionsData, setPositionsData] = useState<any[]>();
-  const [value, setValue] = useState('Initial value');
-
-  const onChange = useCallback((value: string) => {
-    setValue(value);
-  }, []);
 
   const getCategories = async () => {
     let { data, error } = await supabase.from('skill_categories').select('*');
@@ -40,55 +76,200 @@ const EditForm: React.FC<EditFormProps> = ({
       setCategories(data.map((category) => category.name));
     }
   };
-  const getPositions = async () => {
-    let { data: positions, error } = await supabase
-      .from('positions')
-      .select('*');
-    if (positions) {
-      setPositionsData(
-        positions.map((position) => ({
-          value: `${position.seniority}${position.department}`,
-          closable: true,
-        }))
-      );
-    }
-  };
 
-  const updateSkill = async (formData: SkillDetailedData) => {
-    console.log(formData);
-    const { data, error } = await supabase
-      .from('skills')
-      .update(formData)
-      .eq('id', defaultData?.id)
+  const updateSkill = async (formData: SkillsFormData) => {
+    const { data: L1data, error: L1error } = await supabase
+      .from('skill_level_details')
+      .update({
+        description: formData.l1_description,
+        examples: formData.l1_examples,
+        positions: formData.l1_positions,
+      })
+      .eq('id', defaultData?.L1)
+      .select();
+    const { data: L2data, error: L2error } = await supabase
+      .from('skill_level_details')
+      .update({
+        description: formData.l2_description,
+        examples: formData.l2_examples,
+        positions: formData.l2_positions,
+      })
+      .eq('id', defaultData?.L2)
+      .select();
+    const { data: L3data, error: L3error } = await supabase
+      .from('skill_level_details')
+      .update({
+        description: formData.l3_description,
+        examples: formData.l3_examples,
+        positions: formData.l3_positions,
+      })
+      .eq('id', defaultData?.L3)
       .select();
 
-    if (data) {
-      onClose();
-      onEdited();
-    }
-  };
-  const createSkill = async (formData: SkillDetailedData) => {
-    const { data, error } = await supabase
-      .from('skills')
-      .insert([formData])
+    const { data: L4data, error: L4error } = await supabase
+      .from('skill_level_details')
+      .update({
+        description: formData.l4_description,
+        examples: formData.l4_examples,
+        positions: formData.l4_positions,
+      })
+      .eq('id', defaultData?.L4)
       .select();
 
-    if (data) {
-      onClose();
-      onEdited();
+    const { data: L5data, error: L5error } = await supabase
+      .from('skill_level_details')
+      .update({
+        description: formData.l5_description,
+        examples: formData.l5_examples,
+        positions: formData.l5_positions,
+      })
+      .eq('id', defaultData?.L5)
+      .select();
+
+    if (L1data && L2data && L3data && L4data && L5data) {
+      const { data: skillData, error: skillError } = await supabase
+        .from('skills')
+        .update({
+          name: formData.name,
+          description: formData.description,
+          category: formData.category,
+          L1: L1data[0]?.id,
+          L2: L2data[0]?.id,
+          L3: L3data[0]?.id,
+          L4: L4data[0]?.id,
+          L5: L5data[0]?.id,
+        })
+        .eq('id', defaultData?.id)
+        .select();
+
+      if (skillData) {
+        onClose();
+        onEdited();
+      }
+    }
+  };
+  const createSkill = async (formData: SkillsFormData) => {
+    let createdSkillData;
+    const { data: skillData, error: skillError } = await supabase
+      .from('skills')
+      .insert({
+        name: formData.name,
+        description: formData.description,
+        category: formData.category,
+      })
+      .select();
+
+    if (skillData) {
+      createdSkillData = skillData[0];
+      const { data: L1data, error: L1error } = await supabase
+        .from('skill_level_details')
+        .insert({
+          description: formData.l1_description,
+          examples: formData.l1_examples,
+          positions: formData.l1_positions,
+          main_skill_name: formData.name,
+          level: 'L1',
+        })
+
+        .select();
+
+      const { data: L2data, error: L2error } = await supabase
+        .from('skill_level_details')
+        .insert({
+          description: formData.l2_description,
+          examples: formData.l2_examples,
+          positions: formData.l2_positions,
+          main_skill_name: formData.name,
+          level: 'L2',
+        })
+
+        .select();
+      const { data: L3data, error: L3error } = await supabase
+        .from('skill_level_details')
+        .insert({
+          description: formData.l3_description,
+          examples: formData.l3_examples,
+          positions: formData.l3_positions,
+          main_skill_name: formData.name,
+          level: 'L3',
+        })
+
+        .select();
+
+      const { data: L4data, error: L4error } = await supabase
+        .from('skill_level_details')
+        .insert({
+          description: formData.l4_description,
+          examples: formData.l4_examples,
+          positions: formData.l4_positions,
+          main_skill_name: formData.name,
+          level: 'L4',
+        })
+
+        .select();
+
+      const { data: L5data, error: L5error } = await supabase
+        .from('skill_level_details')
+        .insert({
+          description: formData.l5_description,
+          examples: formData.l5_examples,
+          positions: formData.l5_positions,
+          main_skill_name: formData.name,
+          level: 'L5',
+        })
+
+        .select();
+
+      if (L1data && L2data && L3data && L4data && L5data) {
+        const { data: skillData, error: skillError } = await supabase
+          .from('skills')
+          .update({
+            name: formData.name,
+            description: formData.description,
+            category: formData.category,
+            L1: L1data[0]?.id,
+            L2: L2data[0]?.id,
+            L3: L3data[0]?.id,
+            L4: L4data[0]?.id,
+            L5: L5data[0]?.id,
+          })
+          .eq('id', createdSkillData?.id)
+          .select();
+
+        if (skillData) {
+          onClose();
+          onEdited();
+        }
+      }
     }
   };
 
   useEffect(() => {
     getCategories();
-    getPositions();
   }, []);
 
   return (
     <div>
       <Form
         layout="vertical"
-        initialValues={defaultData}
+        initialValues={{
+          ...defaultData,
+          l1_description: defaultData?.L1Details?.description,
+          l1_examples: defaultData?.L1Details?.examples,
+          l1_positions: defaultData?.L1Details?.positions,
+          l2_description: defaultData?.L2Details?.description,
+          l2_examples: defaultData?.L2Details?.examples,
+          l2_positions: defaultData?.L2Details?.positions,
+          l3_description: defaultData?.L3Details?.description,
+          l3_examples: defaultData?.L3Details?.examples,
+          l3_positions: defaultData?.L3Details?.positions,
+          l4_description: defaultData?.L4Details?.description,
+          l4_examples: defaultData?.L4Details?.examples,
+          l4_positions: defaultData?.L4Details?.positions,
+          l5_description: defaultData?.L5Details?.description,
+          l5_examples: defaultData?.L5Details?.examples,
+          l5_positions: defaultData?.L5Details?.positions,
+        }}
         onFinish={(data) => {
           variant === 'create' ? createSkill(data) : updateSkill(data);
         }}
@@ -112,7 +293,10 @@ const EditForm: React.FC<EditFormProps> = ({
               label="Category"
               rules={[{ required: true, message: 'Please select a category' }]}
             >
-              <Select placeholder="Please select a category">
+              <Select
+                placeholder="Please select a category"
+                options={skillCategories}
+              >
                 {categories.map((category) => (
                   <Option value={category} key={category}>
                     {category}
